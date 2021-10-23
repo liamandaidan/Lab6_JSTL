@@ -5,13 +5,22 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Register Shopping List</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Shopping List</h1>
+        <p>Hello, ${username}<a href="ShoppingList?logout">Logout</a></p>
+        <h2>List</h2>
+        <label for="item">Add Item:</label>
+        <input type="text" value="" name="item">
+        
+        <c:if test="${item != null}">
+            <input type="submit" value="Delete">
+        </c:if>
     </body>
 </html>
