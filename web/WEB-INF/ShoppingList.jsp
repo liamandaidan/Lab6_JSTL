@@ -14,12 +14,16 @@
     </head>
     <body>
         <h1>Shopping List</h1>
-        <p>Hello, ${username}<a href="ShoppingList?logout">Logout</a></p>
+        <p>Hello, ${username} <a href="ShoppingList?logout">Logout</a></p>
         <h2>List</h2>
+        <form method="ShoppingList" method="post">
         <label for="item">Add Item:</label>
         <input type="text" value="" name="item">
-        
+        </form>
         <c:if test="${item != null}">
+            <ul>
+                
+            </ul>
             <input type="submit" value="Delete">
         </c:if>
     </body>
