@@ -22,8 +22,10 @@
             <input type="submit" value="Add">
         </form>
         <form action="ShoppingList?action=delete" method="post">
+            
             <c:forEach var="itemList" items="${list}">
-                <p>${itemList}</p>
+                <input type="radio" name="listItems" value="${itemList}" id="${itemList}">
+                <label for="${itemList}">${itemList}</label><br>
             </c:forEach>
             <c:if test="${list != null}"><input type="submit" value="Delete">  </c:if>
                    

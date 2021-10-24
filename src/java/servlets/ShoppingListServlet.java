@@ -29,11 +29,11 @@ public class ShoppingListServlet extends HttpServlet {
         if (action == null && session.getAttribute("username") == null) {
             //new session
             getServletContext().getRequestDispatcher("/WEB-INF/Register.jsp").forward(request, response);
-        } else if (action.equals("register")) {
+        } else if (action != null && action.equals("register")) {
             //register
             session.setAttribute("username", request.getParameter("username"));
             getServletContext().getRequestDispatcher("/WEB-INF/ShoppingList.jsp").forward(request, response);
-        } else if (action.equals("add")) {
+        } else if (action != null && action.equals("add")) {
             String item = request.getParameter("item");
             if (session.getAttribute("list") == null || session.getAttribute("list").equals("")) {
                 //make new list if it doesnt exist
@@ -47,9 +47,15 @@ public class ShoppingListServlet extends HttpServlet {
             session.setAttribute("list", list);
             System.out.println(list.toString());
             getServletContext().getRequestDispatcher("/WEB-INF/ShoppingList.jsp").forward(request, response);
-        } else if (action.equals("delete")) {
+        } else if (action != null && action.equals("delete")) {
             //delete item
-        } else if (action.equals("logout")) {
+            String item = request.getParameter("listItems");
+            System.out.println("Item selected is: "+item);
+            list = (ArrayList<String>)session.getAttribute("list");
+            list.remove(item);
+            session.setAttribute("list", list);
+            getServletContext().getRequestDispatcher("/WEB-INF/ShoppingList.jsp").forward(request, response);
+        } else if (action != null && action.equals("logout")) {
             //logout user
             session.invalidate();
             session = request.getSession();
@@ -57,6 +63,8 @@ public class ShoppingListServlet extends HttpServlet {
             response.sendRedirect("ShoppingList");
         } else {
             System.out.println("There was an error in logic");
+            session.invalidate();
+            getServletContext().getRequestDispatcher("/WEB-INF/Register.jsp").forward(request, response);
         }
     }
 
