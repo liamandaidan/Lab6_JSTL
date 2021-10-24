@@ -14,17 +14,19 @@
     </head>
     <body>
         <h1>Shopping List</h1>
-        <p>Hello, ${username} <a href="ShoppingList?logout">Logout</a></p>
+        <p>Hello, ${username} <a href="ShoppingList?action=logout">Logout</a></p>
         <h2>List</h2>
-        <form method="ShoppingList" method="post">
-        <label for="item">Add Item:</label>
-        <input type="text" value="" name="item">
+        <form method="post" action="ShoppingList?action=add">
+            <label for="item">Add Item:</label>
+            <input type="text" value="" name="item">
+            <input type="submit" value="Add">
         </form>
-        <c:if test="${item != null}">
-            <ul>
-                
-            </ul>
-            <input type="submit" value="Delete">
-        </c:if>
+        <form action="ShoppingList?action=delete" method="post">
+            <c:forEach var="itemList" items="${list}">
+                <p>${itemList}</p>
+            </c:forEach>
+            <c:if test="${list != null}"><input type="submit" value="Delete">  </c:if>
+                   
+        </form>
     </body>
 </html>

@@ -6,6 +6,7 @@
 package servlets;
 
 import java.io.*;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,20 +22,41 @@ public class ShoppingListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = null;
-        String username = request.getParameter("username");
-        if (username != null && !username.equals("")) {
-            //display shopping list
-             session = request.getSession();
-            session.setAttribute("username", username);
-            displayShoppingList(response, request);
-        } else if (request.getParameter("logout") != null && !request.getParameter("logout").equals("")) {
+        HttpSession session = request.getSession();
+        String action = request.getParameter("action");
+        System.out.println(action);
+        ArrayList<String> list = null;
+        if (action == null && session.getAttribute("username") == null) {
+            //new session
+            getServletContext().getRequestDispatcher("/WEB-INF/Register.jsp").forward(request, response);
+        } else if (action.equals("register")) {
+            //register
+            session.setAttribute("username", request.getParameter("username"));
+            getServletContext().getRequestDispatcher("/WEB-INF/ShoppingList.jsp").forward(request, response);
+        } else if (action.equals("add")) {
+            String item = request.getParameter("item");
+            if (session.getAttribute("list") == null || session.getAttribute("list").equals("")) {
+                //make new list if it doesnt exist
+                list = new ArrayList<>();
+                list.add(item);
+            } else {
+                //if arrayList already exists
+                list = (ArrayList<String>) session.getAttribute("list");
+                list.add(item);
+            }
+            session.setAttribute("list", list);
+            System.out.println(list.toString());
+            getServletContext().getRequestDispatcher("/WEB-INF/ShoppingList.jsp").forward(request, response);
+        } else if (action.equals("delete")) {
+            //delete item
+        } else if (action.equals("logout")) {
+            //logout user
             session.invalidate();
             session = request.getSession();
-            viewLogin(response, request);
+            request.setAttribute("errormsg", "You have been logged out.");
+            response.sendRedirect("ShoppingList");
         } else {
-            //view login
-            viewLogin(response, request);
+            System.out.println("There was an error in logic");
         }
     }
 
@@ -42,14 +64,6 @@ public class ShoppingListServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
-    }
-
-    private void displayShoppingList(HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/WEB-INF/ShoppingList.jsp").forward(request, response);
-    }
-
-    private void viewLogin(HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/WEB-INF/Register.jsp").forward(request, response);
     }
 
 }
